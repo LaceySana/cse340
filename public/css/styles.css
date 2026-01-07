@@ -1,6 +1,19 @@
+:root {
+  --serif-font: "Faustina", serif;
+  --sans-serif-font: "Roboto", serif;
+}
+
 /******* Change Box Model ***************/
 *,
 *:before,
 *:after {
   box-sizing: border-box;
+}
+
+body {
+  font-family: var(--sans-serif-font);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--serif-font);
 }
