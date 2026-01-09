@@ -1,4 +1,4 @@
-@media only screen and (min-width: 35rem) {
+@media only screen and (min-width: 45rem) {
     body {
         background-image: url('/images/site/small_check.jpg');
     }
@@ -14,6 +14,10 @@
         grid-template-areas: 
         'hero hero'
         'upg rev';
+    }
+
+    #hero {
+        grid-area: hero;
     }
 
     #rev-div {
