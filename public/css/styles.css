@@ -30,6 +30,10 @@ li {
   line-height: 2;
 }
 
+a {
+  text-decoration: none;
+}
+
 #wrapper {
   padding: 0.5rem;
   background-color: var(--accent-color-1);
@@ -44,7 +48,6 @@ li {
 
 #top-header a {
   color: var(--primary-color);
-  text-decoration: none;
   font-weight: bold;
 }
 
@@ -62,6 +65,10 @@ nav ul {
 
 nav li {
   list-style-type: none;
+}
+
+nav a {
+  color: var(--accent-color-1);
 }
 
 #hero {
