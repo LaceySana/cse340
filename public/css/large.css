@@ -9,7 +9,7 @@
         border-radius: 5px;
     }
 
-    main {
+    #home {
         display: grid;
         grid-template-areas: 
         'hero hero'
@@ -27,5 +27,16 @@
     #upg-div {
         grid-area: upg;
     }
+
+    #vehicle-details {
+        flex-direction: row;
+    }
+
+    #vehicle-details > img {
+        flex-shrink: 1;
+        max-width: 50%;
+        align-self: flex-start;
+    }
+
 
 }
