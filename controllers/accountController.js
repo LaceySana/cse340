@@ -8,10 +8,23 @@ const utilities = require('../utilities');
 * *************************************** */
 async function buildLogin(req, res, next) {
     let nav = await utilities.getNav();
-    res.render("account/login", {
+    res.render("./account/login", {
         title: "Login",
         nav,
     })
 }
 
-module.exports = { buildLogin }
+
+/* ****************************************
+*  Deliver register view
+* *************************************** */
+async function buildRegister(req, res, next) {
+    let nav = await utilities.getNav();
+    res.render("./account/register", {
+        title: "Register",
+        nav,
+        errors: null
+    })
+}
+
+module.exports = { buildLogin, buildRegister }
