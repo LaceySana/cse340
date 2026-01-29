@@ -167,3 +167,38 @@ nav a {
   list-style-type: none;
   padding: 0;
 }
+
+form {
+  background-color: var(--secondary-color);
+  border: var(--accent-color-2) solid 3px;
+  border-radius: 10px;
+  padding: 1em 2em;
+  margin: 1em;
+  place-items: center;
+
+  label {
+    font-weight: bold;
+    font-size: larger;
+  }
+
+  input, button {
+    display: block;
+    margin: .5em 0;
+  }
+
+  input {
+    width: 100%;
+    padding: 8px;
+  }
+
+  button {
+    padding: 5px 10px;
+    border: var(--primary-color) solid 1px;
+    border-radius: 50ch;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+  }
+}
