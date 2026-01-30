@@ -6,13 +6,22 @@
 
 <%- messages() %>
 
+<% if (errors) { %>
+    <ul class="notice-bad">
+        <% errors.array({ onlyFirstError: true }).forEach(error => { %>
+            <li><%= error.msg %></li>
+    <% }); %>
+    </ul>
+<% } %>
+
+<i>All Fields Are Required.</i>
 <form action="/account/register" method="post">
     <label>First Name: <input type="text" name="account_firstname" required></label>
     <label>Last Name: <input type="text" name="account_lastname" required></label>
-    <label>Email: <input type="email" name="account_email" required></label>
-    <label>Password: <input type="password" name="account_password" required></label>
+    <label>Email: <input type="email" name="account_email" required placeholder="example@email.com"></label>
+    <label>Password: <input type="password" name="account_password" required pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"></label>
     <details class="input-requirements" open>
-        <summary>Password Must Contain the Following:</summary>
+        <summary>Password Must Include:</summary>
         <ul>
             <li><strong>12 characters</strong>, minimum</li>
             <li>at least <strong>1 capital letter</strong></li>
