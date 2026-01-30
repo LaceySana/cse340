@@ -222,12 +222,12 @@ form {
 
 }
 
-.notice {
+.notice-good {
   color: #035000;
   font-style: italic;
 }
 
-.warning {
+.notice-bad {
   color: #f00;
   font-style: italic;
 }
