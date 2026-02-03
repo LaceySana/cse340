@@ -10,9 +10,16 @@ router.get("/register", acctController.buildRegister)
 // Route for register form action
 router.post(
     "/register", 
-    regValidate.registationRules(),
+    regValidate.registrationRules(),
     regValidate.checkRegData,
     utilities.handleErrors(acctController.registerAccount)
+)
+// Process the login attempt
+router.post(
+    "/login",
+    regValidate.loginRules(),
+    regValidate.checkLoginData,
+    utilities.handleErrors(acctController.loginToAccount)
 )
 
 module.exports = router;

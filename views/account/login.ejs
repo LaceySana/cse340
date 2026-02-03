@@ -6,8 +6,16 @@
 
 <%- messages() %>
 
-<form action="" method="post">
-    <label>Email: <input type="email" name="account_email" required placeholder="example@email.com"></label>
+<% if (errors) { %>
+    <ul class="notice-bad">
+        <% errors.array({ onlyFirstError: true }).forEach(error => { %>
+            <li><%= error.msg %></li>
+    <% }); %>
+    </ul>
+<% } %>
+
+<form id="loginForm" action="/account/login" method="post">
+    <label>Email: <input type="email" name="account_email" required placeholder="example@email.com" value="<%= locals.account_email %>"></label>
     <label>Password: <input type="password" name="account_password" required pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"></label>
     <details class="input-requirements">
         <summary>Password Must Include:</summary>
