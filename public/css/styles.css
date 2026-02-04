@@ -182,14 +182,42 @@ form {
     font-size: larger;
   }
 
-  input, button {
+  i {
     display: block;
-    margin: .5em 0;
+    place-self: start;
+    margin: .5em;
   }
 
-  input {
+  input, select, textarea, button {
+    display: block;
+    margin: .5em 0;
+    border-radius: 4px;
+  }
+
+  input, textarea {
     width: 100%;
     padding: 8px;
+
+    &:valid {
+      border-left: #035000 3px inset;
+    }
+
+    &:invalid {
+      border-left: #f00 3px inset;
+    }
+  }
+
+  select {
+    width: max-content;
+    padding: 8px;
+
+    &:invalid {
+      border-left: #f00 3px inset;
+    }
+  }
+
+  textarea {
+    height: 80px;
   }
 
   button {

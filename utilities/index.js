@@ -83,6 +83,15 @@ Util.buildInventoryDetails = async function (vehicle) {
     return details;
 }
 
+Util.getClassificationSelectOpts = async function (classification_id) {
+    let options;
+    let data = await invModel.getClassifications();
+    data.rows.forEach(row => {
+        options += `<option value="${row.classification_id}" ${row.classification_id == classification_id ? "selected" : ""}>${row.classification_name}</option>`;
+    });
+    return options;
+}
+
 
 /* ****************************************
  * Middleware For Handling Errors
