@@ -138,6 +138,19 @@ nav a {
   height: min-content;
 } */
 
+/* || CLASSIFICATION GRID || */
+
+#inv-display {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  align-items: end;
+
+  li {
+    display: block;
+    list-style-type: none;
+  }
+}
+
 /* || DETAILS || */
 
 #vehicle-details {
