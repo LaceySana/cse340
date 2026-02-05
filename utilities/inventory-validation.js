@@ -135,12 +135,12 @@ validate.checkInventoryData = async (req, res, next) => {
     errors = validationResult(req);
     if (!errors.isEmpty()) {
         let nav = await utilities.getNav();
-        let classifications = await utilities.getClassificationSelectOpts(classification_id);
+        let classificationSelect = await utilities.buildClassificationSelectElem(classification_id);
         res.render("./inventory/add-inventory", {
             errors,
             title: "Add New Vehicle",
             nav,
-            classifications,
+            classificationSelect,
             inv_make, 
             inv_model, 
             inv_year, 
@@ -151,6 +151,39 @@ validate.checkInventoryData = async (req, res, next) => {
             inv_miles, 
             inv_color, 
             classification_id
+        })
+        return;
+    }
+    next();
+}
+
+/*  **********************************
+*  Check and return errors or continue
+* ********************************* */
+validate.checkUpdateData = async (req, res, next) => {
+    const { inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, classification_id, inv_id } = req.body;
+    let errors = [];
+    errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        let nav = await utilities.getNav();
+        let classificationSelect = await utilities.buildClassificationSelectElem(classification_id);
+        const name = `${inv_make} ${inv_model}`; 
+        res.render("./inventory/edit-inventory", {
+            errors,
+            title: "Edit " + name,
+            nav,
+            classificationSelect,
+            inv_make, 
+            inv_model, 
+            inv_year, 
+            inv_description, 
+            inv_image, 
+            inv_thumbnail, 
+            inv_price, 
+            inv_miles, 
+            inv_color, 
+            classification_id,
+            inv_id
         })
         return;
     }

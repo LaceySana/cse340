@@ -19,6 +19,7 @@ async function getInventoryByClassificationId(classification_id) {
             WHERE i.classification_id = $1`,
             [classification_id]
         );
+        console.log(data);
         return data.rows;
     } catch (error) {
         console.error("getClassificationById error " + error);
@@ -71,4 +72,38 @@ async function insertNewInventory(inv_make, inv_model, inv_year, inv_description
     }
 }
 
-module.exports = { getClassifications, getInventoryByClassificationId, getDetailsByInventoryId, insertNewClassification, insertNewInventory }
+/* ***************************
+ *  Update inventory data
+ * ************************** */
+async function updateInventory(inv_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, classification_id) {
+    try {
+        const data = await pool.query(
+            `UPDATE inventory SET inv_make = $1, inv_model = $2, inv_year = $3, inv_description = $4, inv_image = $5, inv_thumbnail = $6, inv_price = $7, inv_miles = $8, inv_color = $9, classification_id = $10 WHERE inv_id = $11 RETURNING *`,
+            [inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, classification_id, inv_id]
+        );
+        return data.rows[0];
+    } catch (error) {
+        console.error("updateInventory error " + error);
+        return error.message;
+    }
+}
+
+/* ***************************
+ *  Delete inventory item
+ * ************************** */
+async function deleteVehicle(inv_id) {
+    try {
+        const data = await pool.query(
+            `DELETE FROM inventory WHERE inv_id = $1`,
+            [inv_id]
+        );
+        return data;
+    } catch (error) {
+        console.error("updateInventory error " + error);
+        return error.message;
+    }
+}
+
+
+
+module.exports = { getClassifications, getInventoryByClassificationId, getDetailsByInventoryId, insertNewClassification, insertNewInventory, updateInventory, deleteVehicle }

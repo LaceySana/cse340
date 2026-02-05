@@ -26,14 +26,14 @@ async function checkExistingEmail(account_email){
   }
 }
 
-async function verifyLogin(account_email, account_password) {
+async function getAccountByEmail(account_email) {
   try {
-    const sql = "SELECT account_firstname FROM account WHERE account_email = $1 AND account_password = $2";
-    const firstname = await pool.query(sql, [account_email, account_password]);
-    return firstname;
+    const sql = "SELECT account_id, account_firstname, account_lastname, account_email, account_type, account_password FROM account WHERE account_email = $1";
+    const result = await pool.query(sql, [account_email]);
+    return result.rows[0];
   } catch (error) {
-    return error.message;
+    return new Error("No matching email found");
   }
 }
 
-module.exports = { registerAccount, checkExistingEmail, verifyLogin }
+module.exports = { registerAccount, checkExistingEmail, getAccountByEmail }

@@ -13,7 +13,7 @@ router.get("/detail/:inventoryId", utilities.handleErrors(invController.buildByI
 router.get("/", utilities.handleErrors(invController.buildManagement));
 // Route to build add new classification view
 router.get("/addClass", utilities.handleErrors(invController.buildAddClassification));
-// Route to build add new classification view
+// Route to process add new classification
 router.post(
     "/addClass", 
     invValidation.newClassificationRules(),
@@ -22,12 +22,33 @@ router.post(
 );
 // Route to build add new inventory view
 router.get("/addInv", utilities.handleErrors(invController.buildAddInventory));
-// Route to build add new inventory view
+// Route to process add new inventory
 router.post(
     "/addInv", 
     invValidation.newInventoryRules(),
     invValidation.checkInventoryData,
     utilities.handleErrors(invController.addNewInventory),
 );
+// Route to get inventory data
+router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON));
+// Route to build edit vehicle view
+router.get("/edit/:inv_id", utilities.handleErrors(invController.buildEditInventory));
+// Route to edit vehicle data
+router.post(
+    "/edit/",
+    invValidation.newInventoryRules(),
+    invValidation.checkUpdateData,
+    utilities.handleErrors(invController.updateInventory),
+);
+// Route to build delete vehicle view
+router.get("/delete/:inv_id", utilities.handleErrors(invController.deleteConfirmation));
+// Route to delete vehicle data
+router.post(
+    "/delete",
+    utilities.handleErrors(invController.deleteVehicle),
+);
+
+
+
 
 module.exports = router;

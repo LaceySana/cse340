@@ -14,7 +14,7 @@
     </ul>
 <% } %>
 
-<form action="/inv/addInv" method="post">
+<form id="updateForm" action="/inv/edit" method="post">
     <i>All fields are required.</i>
     <label>Classification   
         <%- classificationSelect %>
@@ -28,5 +28,10 @@
     <label>Description<textarea name="inv_description" required><%- locals.inv_description %></textarea></label>
     <label>Image Path: <input type="text" name="inv_image" required value="<%- locals.inv_image || '/images/vehicles/no-image.png' %>"></label>
     <label>Thumbnail Path: <input type="text" name="inv_thumbnail" required value="<%- locals.inv_thumbnail || '/images/vehicles/no-image-tn.png' %>"></label>
-    <button type="submit">Add Vehicle</button>
+    <button type="submit" disabled>Update Vehicle</button>
+    <input type="hidden" name="inv_id" <% if (locals.inv_id) { %> value="<%= locals.inv_id %>" <% } %>>
 </form>
+
+
+<noscript>JavaScript must be enabled to use this page.</noscript>
+<script src="../../js/inv-update.js"></script>
