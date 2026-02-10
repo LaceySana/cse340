@@ -145,12 +145,12 @@ nav a {
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   align-items: end;
 
-  li {
-    display: block;
-    list-style-type: none;
-  }
 }
 
+#inv-display li {
+  display: block;
+  list-style-type: none;
+}
 /* || DETAILS || */
 
 #vehicle-details {
@@ -188,80 +188,80 @@ form {
   padding: 1em 2em;
   margin: 1em auto;
   place-items: center;
-  max-width: 500px;
-
-  label {
-    font-weight: bold;
-    font-size: larger;
-  }
-
-  i {
-    display: block;
-    place-self: start;
-    margin: .5em;
-  }
-
-  input, select, textarea, button {
-    display: block;
-    margin: .5em 0;
-    border-radius: 4px;
-  }
-
-  input, textarea {
-    width: 100%;
-    padding: 8px;
-
-    &:valid {
-      border-left: #035000 3px inset;
-    }
-
-    &:invalid {
-      border-left: #f00 3px inset;
-    }
-  }
-
-  select {
-    width: max-content;
-    padding: 8px;
-
-    &:invalid {
-      border-left: #f00 3px inset;
-    }
-  }
-
-  textarea {
-    height: 80px;
-  }
-
-  button {
-    padding: 5px 10px;
-    border: var(--primary-color) solid 1px;
-    border-radius: 50ch;
-    font-weight: bold;
-  }
-
-  a {
-    color: inherit;
-    text-decoration: underline;
-  }
-
-  .input-requirements {
-    place-self: start;
-    color: #333;
-    font-size: 90%;
-
-    ul {
-      margin: 5px;
-    }
-
-    li {
-      line-height: 1.2;
-      list-style-type: circle;
-    }
-  }
-
-
+  max-width: 500px;  
+  
 }
+
+label {
+  font-weight: bold;
+  font-size: larger;
+}
+
+i {
+  display: block;
+  place-self: start;
+  margin: .5em;
+}
+
+input, select, textarea, button {
+  display: block;
+  margin: .5em 0;
+  border-radius: 4px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 8px;
+}
+
+input:valid, textarea:valid {
+  border-left: #035000 3px inset;
+}
+
+input:invalid, textarea:invalid {
+  border-left: #f00 3px inset;
+}
+
+select {
+  width: max-content;
+  padding: 8px;
+}
+
+select:invalid {
+  border-left: #f00 3px inset;
+}
+
+textarea {
+  height: 80px;
+}
+
+button {
+  padding: 5px 10px;
+  border: var(--primary-color) solid 1px;
+  border-radius: 50ch;
+  font-weight: bold;
+}
+
+form a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.input-requirements {
+  place-self: start;
+  color: #333;
+  font-size: 90%;
+}
+
+.input-requirements ul {
+  margin: 5px;
+}
+
+.input-requirements li {
+  line-height: 1.2;
+  list-style-type: circle;
+}
+
 
 .notice-good {
   color: #035000;

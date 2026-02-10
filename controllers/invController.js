@@ -104,18 +104,20 @@ invCont.addNewInventory = async function (req, res) {
     let nav = await utilities.getNav();
     
     const { inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, classification_id } = req.body;
-    let classificationSelect = await utilities.buildClassificationSelectElem(classification_id);
     
     const insertResults = await invModel.insertNewInventory(inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, classification_id);
-
+    
     if (insertResults) {
+        let classificationSelect = await utilities.buildClassificationSelectElem();
         req.flash("notice-good", `${inv_make} ${inv_model} has been added to the inventory.`);
         res.status(201).render("./inventory/management", {
             title: "Management View",
             nav,
+            classificationSelect,
             errors: null
         });
     } else {
+        let classificationSelect = await utilities.buildClassificationSelectElem(classification_id);
         req.flash("notice-bad", `Unable to add ${inv_make} ${inv_model} to the inventory. Please try again.`);
         res.status(201).render("./inventory/add-inventory", {
             title: "Add New Vehicle",
