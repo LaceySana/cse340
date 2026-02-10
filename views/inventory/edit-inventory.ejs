@@ -22,7 +22,7 @@
     <label>Make: <input type="text" name="inv_make" required pattern="[a-zA-Z]{3,}" placeholder="Min. 3 characters" value="<%= locals.inv_make %>"></label>
     <label>Model: <input type="text" name="inv_model" required pattern="[a-zA-Z]{3,}" placeholder="Min. 3 characters" value="<%= locals.inv_model %>"></label>
     <label>Year: <input type="number" name="inv_year" required min="1000" placeholder="4-digit year" value="<%= locals.inv_year %>"></label>
-    <label>Milage: <input type="number" name="inv_miles" required placeholder="Digits only" value="<%= locals.inv_miles %>"></label>
+    <label>Milage: <input type="number" name="inv_miles" required min="0" placeholder="Digits only" value="<%= locals.inv_miles %>"></label>
     <label>Price: <input type="text" name="inv_price" required pattern="[0-9.]+" placeholder="Decimal or integer" value="<%= locals.inv_price %>"></label>
     <label>Color:<input type="text" name="inv_color" required pattern="[a-zA-Z]{3,}" value="<%= locals.inv_color %>"></label>
     <label>Description<textarea name="inv_description" required><%- locals.inv_description %></textarea></label>

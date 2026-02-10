@@ -108,7 +108,9 @@ validate.newInventoryRules = () => {
         .notEmpty()
         .withMessage("Please provide the vehicle's miles.")
         .isNumeric()
-        .withMessage("Vehicle's miles must be a number."),
+        .withMessage("Vehicle's miles must be a number.")
+        .isFloat({min: 0})
+        .withMessage("Vehicle's miles cannot be less than 0."),
         // 
         body("inv_color")
         .trim()

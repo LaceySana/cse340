@@ -222,12 +222,12 @@ input:invalid, textarea:invalid {
   border-left: #f00 3px inset;
 }
 
-select {
+form select {
   width: max-content;
   padding: 8px;
 }
 
-select:invalid {
+form select:invalid {
   border-left: #f00 3px inset;
 }
 
