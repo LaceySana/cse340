@@ -130,16 +130,31 @@ Util.checkJWTToken = (req, res, next) => {
 }
 
 /* ****************************************
- *  Check Login
- * ************************************ */
- Util.checkLogin = (req, res, next) => {
+*  Check Login
+* ************************************** */
+Util.checkLogin = (req, res, next) => {
     if (res.locals.loggedin) {
         next();
     } else {
         req.flash("notice-bad", "Please log in.");
         return res.redirect("/account/login");
     }
- }
+}
+
+/* ****************************************
+*  Check Account Type
+* ************************************** */
+Util.checkAccountType = (req, res, next) => {
+    let acctType = res.locals.accountData.account_type;
+    if (acctType === "Employee" || acctType === "Admin") {
+        next();
+    } else {
+        req.flash("notice-bad", "Access denied. Please log in with an authorized account.");
+        return res.redirect("/account/login");
+    }
+}
+
+
 
 
 module.exports = Util

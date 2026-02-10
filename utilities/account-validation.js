@@ -65,22 +65,22 @@ validate.registrationRules = () => {
  * Check data and return errors or continue to registration
  * ***************************** */
 validate.checkRegData = async (req, res, next) => {
-  const { account_firstname, account_lastname, account_email } = req.body;
-  let errors = [];
-  errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    let nav = await utilities.getNav();
-    res.render("account/register", {
-      errors,
-      title: "Register",
-      nav,
-      account_firstname,
-      account_lastname,
-      account_email,
-    });
-    return;
-  }
-  next();
+    const { account_firstname, account_lastname, account_email } = req.body;
+    let errors = [];
+    errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        let nav = await utilities.getNav();
+        res.render("account/register", {
+            errors,
+            title: "Register",
+            nav,
+            account_firstname,
+            account_lastname,
+            account_email,
+        });
+        return;
+    }
+    next();
 }
 
 
@@ -100,10 +100,10 @@ validate.loginRules = () => {
     .normalizeEmail() // refer to validator.js docs
     .withMessage("A valid email is required.")
     .custom(async (account_email) => {
-      const emailExists = await accountModel.checkExistingEmail(account_email)
-      if (!emailExists){
-        throw new Error("Email does not exists. Please try a different email")
-      }
+        const emailExists = await accountModel.checkExistingEmail(account_email)
+        if (!emailExists){
+            throw new Error("Email does not exists. Please try a different email")
+        }
     }),
 
     // password is required and must be strong password
@@ -126,21 +126,137 @@ validate.loginRules = () => {
  * Check data and return errors or continue to login process
  * ***************************** */
 validate.checkLoginData = async (req, res, next) => {
-  const { account_email } = req.body;
-  let errors = [];
-  errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    let nav = await utilities.getNav();
-    res.render("account/login", {
-      errors,
-      title: "Login",
-      nav,
-      account_email,
-    });
-    return;
-  }
-  next();
+    const { account_email } = req.body;
+    let errors = [];
+    errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        let nav = await utilities.getNav();
+        res.render("account/login", {
+            errors,
+            title: "Login",
+            nav,
+            account_email,
+        });
+        return;
+    }
+    next();
 }
+
+/*  **********************************
+*  Account update Data Validation Rules
+* ********************************* */
+validate.updateRules = () => {
+    return [
+        // firstname is required and must be string
+        body("account_firstname")
+        .trim()
+        .escape()
+        .notEmpty()
+        .withMessage("Please provide a first name.")
+        .isLength({ min: 1 })
+        .withMessage("First name is too short."), // on error this message is sent.
+
+        // lastname is required and must be string
+        body("account_lastname")
+        .trim()
+        .escape()
+        .notEmpty()
+        .withMessage("Please provide a last name.")
+        .isLength({ min: 2 })
+        .withMessage("Last name is too short."), // on error this message is sent.
+
+        // valid email is required and cannot already exist in the DB
+        body("account_email")
+        .trim()
+        .escape()
+        .notEmpty()
+        .withMessage("A valid email is required.")
+        .isEmail()
+        .withMessage("A valid email is required.")
+        .normalizeEmail() 
+        .withMessage("A valid email is required.")
+        .custom(async (account_email, { req }) => {
+            if (!account_email === req.res.locals.accountData.account_email) {
+                const emailExists = await accountModel.checkExistingEmail(account_email);
+                if (emailExists){
+                    throw new Error("Email exists. Please use a different email")
+                }
+            }
+        }),
+    ];
+}
+
+
+/* ******************************
+ * Check data and return errors or continue to update account process
+ * ***************************** */
+validate.checkUpdateData = async (req, res, next) => {
+    const { account_id, account_firstname, account_lastname, account_email } = req.body;
+    let errors = [];
+    errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        let nav = await utilities.getNav();
+        res.render("account/update", {
+            errors,
+            title: "Update Account Information",
+            nav,
+            account_id,
+            account_firstname,
+            account_lastname,
+            account_email,
+        });
+        return;
+    }   
+    next();
+}
+
+
+/*  **********************************
+*  Change password Data Validation Rules
+* ********************************* */
+validate.passwordRules = () => {
+  return [
+    // password is required and must be strong password
+    body("account_password")
+    .trim()
+    .notEmpty()
+    .withMessage("Please enter your new password.")
+    .isStrongPassword({
+        minLength: 12,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+    })
+    .withMessage("Password does not meet requirements."),
+  ];
+}
+
+/* ******************************
+ * Check data and return errors or continue to change password process
+ * ***************************** */
+validate.checkPasswordData = async (req, res, next) => {
+    const { account_id, account_firstname, account_lastname, account_email } = req.body;
+    let errors = [];
+    errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        let nav = await utilities.getNav();
+        res.render("account/update", {
+            errors,
+            title: "Update Account Information",
+            nav,
+            account_id,
+            account_firstname,
+            account_lastname,
+            account_email
+        });
+        return;
+    }
+    next();
+}
+
+
+
 
 
 module.exports = validate;

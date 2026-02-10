@@ -1,0 +1,40 @@
+<% if (title) { %>
+ <h1><%= title %></h1>
+<% } else { 
+  res.redirect('/')  
+} %>
+
+<%- messages() %>
+
+<% if (errors) { %>
+    <ul class="notice-bad">
+        <% errors.array({ onlyFirstError: true }).forEach(error => { %>
+            <li><%= error.msg %></li>
+    <% }); %>
+    </ul>
+<% } %>
+
+<i>All Fields Are Required.</i>
+<form action="/account/update" method="post">
+    <legend>Account Information</legend>
+    <label>First Name: <input type="text" name="account_firstname" required value="<%= locals.account_firstname || locals.accountData.account_firstname %>"></label>
+    <label>Last Name: <input type="text" name="account_lastname" required value="<%= locals.account_lastname || locals.accountData.account_lastname %>"></label>
+    <label>Email: <input type="email" name="account_email" required placeholder="example@email.com" value="<%= locals.account_email || locals.accountData.account_email %>"></label>
+    <button type="submit">Update Account</button>
+    <input type="hidden" name="account_id" value="<%= locals.account_id %>">
+</form>
+<form action="/account/update/password" method="post">
+    <legend>Change Password</legend>
+    <label>New Password: <input type="password" name="account_password" required pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"></label>
+    <details class="input-requirements" open>
+        <summary>Password Must Include:</summary>
+        <ul>
+            <li><strong>12 characters</strong>, minimum</li>
+            <li>at least <strong>1 capital letter</strong></li>
+            <li>at least <strong>1 number</strong></li>
+            <li>at least <strong>1 special character</strong></li>
+        </ul>
+    </details>
+    <button type="submit">Change Password</button>
+    <input type="hidden" name="account_id" value="<%= locals.account_id %>">
+</form>
