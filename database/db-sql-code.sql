@@ -246,31 +246,3 @@ WHERE inv_id = (SELECT inv_id FROM inventory WHERE inv_make = 'GM' AND inv_model
 UPDATE public.inventory
 SET inv_image = REPLACE(inv_image, '/images', '/images/vehicles'),
 	inv_thumbnail = REPLACE(inv_thumbnail, '/images', '/images/vehicles');
-
--- Insert data into account table
-INSERT INTO public.account (
-    account_firstname,
-    account_lastname,
-    account_email,
-    account_password,
-    account_type
-  ) 
-VALUES (
-    'Basic',
-    'Client',
-    'basic@340.edu',
-    'I@mABas1cCl!3nt',
-    'Client'
-  ), (
-    'Happy',
-    'Employee',
-    'happy@340.edu',
-    'I@mAnEmpl0y33',
-    'Employee'
-  ), (
-    'Manager',
-    'User',
-    'manager@340.edu',
-    'I@mAnAdm!n1strat0r',
-    'Admin'
-  );
