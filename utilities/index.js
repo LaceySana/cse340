@@ -154,6 +154,60 @@ Util.checkAccountType = (req, res, next) => {
     }
 }
 
+/* ****************************************
+*  build received message list for account
+* ************************************** */
+Util.buildReceivedMessageList = async function(data)  {
+    let list;
+    if (data.length > 0) {
+        list = `<ul id="msg-list">`;
+        data.forEach(msg => {
+            list += `
+            <li>
+                <p><strong>${msg.sender_firstname} ${msg.sender_lastname}</strong></p>
+                <p>${msg.subject}</p>
+                <div class="opened-marker"></div>
+                <input type="hidden" value="${msg.msg_id}">
+            </li>
+            `;
+        });
+        list += `</ul>`;
+    } else {
+        list = `<p>Inbox is empty.</p>`;
+    }
+    return list;
+}
+
+/* ****************************************
+*  build sent message list for account
+* ************************************** */
+Util.buildSentMessageList = async function(data)  {
+    const dtFormat = new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",});
+    let list;
+    if (data.length > 0) {
+        list = `<ul id="msg-list">`;
+        data.forEach(msg => {
+            list += `
+            <li>
+                <p>${dtFormat.format(msg.msg_timestamp)}</p>
+                <p><strong>${msg.recipient_firstname} ${msg.recipient_lastname}</strong></p>
+                <p>${msg.subject}</p>
+                <input type="hidden" value="${msg.msg_id}">
+            </li>
+            `;
+        });
+        list += `</ul>`;
+    } else {
+        list = `<p>You have no sent messages.</p>`;
+    }
+    return list;
+}
+
 
 
 

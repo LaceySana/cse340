@@ -1,0 +1,34 @@
+<% if (title) { %>
+<h1><%= title %></h1>
+<% } else { 
+    res.redirect('/')
+} %>
+
+<%- messages() %>
+
+<% if (errors) { %>
+    <ul class="notice-bad">
+        <% errors.array({ onlyFirstError: true }).forEach(error => { %>
+            <li><%= error.msg %></li>
+    <% }); %>
+    </ul>
+<% } %>
+
+<% if (locals.accountData.account_type === "Employee" || locals.accountData.account_type === "Admin") { %>
+<ul>
+    <li><a href="./inbox">Inbox</a></li>
+    <li><a href="./sent">Sent</a></li>
+    <li><a href="./new-message">Create New Message</a></li>
+</ul>
+<% } %>
+
+
+<%- list %>
+
+<div id="msg-options"></div>
+<div id="msg-details"></div>
+
+
+<noscript>JavaScript must be enabled to use this page.</noscript>
+
+<script src="../../js/messages.js"></script>

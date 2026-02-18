@@ -1,0 +1,22 @@
+<% if (title) { %>
+<h1><%= title %></h1>
+<% } else { 
+    res.redirect('/')
+} %>
+
+<%- messages() %>
+
+<% if (errors) { %>
+    <ul class="notice-bad">
+        <% errors.array({ onlyFirstError: true }).forEach(error => { %>
+            <li><%= error.msg %></li>
+    <% }); %>
+    </ul>
+<% } %>
+
+<form class="message-form" action="/messages/new-message" method="post">
+    <label>To: <input type="email" name="account_email" value="<%= locals.account_email %>" required placeholder="example@email.com"></label>
+    <label>Subject: <input type="text" name="subject" value="<%= locals.subject %>" required placeholder="Message Subject"></label>
+    <label>Message: <textarea name="msg_content" required placeholder="Empty Message."><%= locals.msg_content %></textarea></label>
+    <button type="submit">Send Message</button>
+</form>

@@ -56,6 +56,11 @@ a {
   font-size: xx-large;
 }
 
+#tools {
+  display: flex;
+  gap: 1rem;
+}
+
 nav ul {
   display: flex;
   justify-content: space-around;
@@ -262,6 +267,25 @@ form a {
   list-style-type: circle;
 }
 
+
+.message-form {
+  background-color: var(--accent-color-2);
+  border-color: var(--secondary-color);
+}
+
+.message-form > input:valid, textarea:valid, input:invalid, textarea:invalid {
+  border: #333 inset 2px;
+  background-color: #eee;
+}
+
+.message-form textarea {
+  height: 200px;
+}
+
+.active {
+  background-color: var(--accent-color-2);
+  border: var(--secondary-color) solid 1px;
+}
 
 .notice-good {
   color: #035000;
