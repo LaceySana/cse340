@@ -14,17 +14,18 @@ async function getMessageByID(msg_id) {
                 sender.account_firstname as sender_firstname,
                 sender.account_lastname as sender_lastname,
                 sender.account_email as sender_email, 
-                recipient.account_firstname as recipient_firstname,
-                recipient.account_lastname as recipient_lastname,
-                recipient.account_email as recipient_email  
+                ARRAY_AGG(recipient.account_email) as list_of_recipient_emails
             FROM public.conversation c 
             JOIN public.message m 
             ON c.conversation_id = m.conversation_id
             JOIN public.account sender
             ON m.sender_id = sender.account_id
+            JOIN public.message_recipient mr
+            ON m.msg_id = mr.msg_id 
             JOIN public.account recipient
-            ON m.recipient_id = recipient.account_id 
-            WHERE msg_id = $1`,
+            ON mr.account_id = recipient.account_id
+            WHERE m.msg_id = $1
+            GROUP BY c.conversation_id, m.msg_id, sender.account_firstname, sender.account_lastname, sender.account_email`,
             [msg_id]
         );
         return data.rows[0];
@@ -45,17 +46,18 @@ async function getMessagesByConversation(conversation_id) {
                 sender.account_firstname as sender_firstname,
                 sender.account_lastname as sender_lastname,
                 sender.account_email as sender_email, 
-                recipient.account_firstname as recipient_firstname,
-                recipient.account_lastname as recipient_lastname,
-                recipient.account_email as recipient_email  
+                ARRAY_AGG(recipient.account_email) as list_of_recipient_emails
             FROM public.conversation c 
             JOIN public.message m 
             ON c.conversation_id = m.conversation_id
             JOIN public.account sender
             ON m.sender_id = sender.account_id
+            JOIN public.message_recipient mr
+            ON m.msg_id = mr.msg_id 
             JOIN public.account recipient
-            ON m.recipient_id = recipient.account_id 
-            WHERE conversation_id = $1`,
+            ON mr.account_id = recipient.account_id
+            WHERE c.conversation_id = $1
+            GROUP BY c.conversation_id, m.msg_id, sender.account_firstname, sender.account_lastname, sender.account_email`,
             [conversation_id]
         );
         return data.rows;
@@ -76,17 +78,18 @@ async function getReceivedMessagesByAccountId(account_id) {
                 sender.account_firstname as sender_firstname,
                 sender.account_lastname as sender_lastname,
                 sender.account_email as sender_email, 
-                recipient.account_firstname as recipient_firstname,
-                recipient.account_lastname as recipient_lastname,
-                recipient.account_email as recipient_email  
+                ARRAY_AGG(recipient.account_email) as list_of_recipient_emails
             FROM public.conversation c 
             JOIN public.message m 
             ON c.conversation_id = m.conversation_id
             JOIN public.account sender
             ON m.sender_id = sender.account_id
+            JOIN public.message_recipient mr
+            ON m.msg_id = mr.msg_id 
             JOIN public.account recipient
-            ON m.recipient_id = recipient.account_id
-            WHERE recipient_id = $1`,
+            ON mr.account_id = recipient.account_id
+            WHERE mr.account_id = $1
+            GROUP BY c.conversation_id, m.msg_id, sender.account_firstname, sender.account_lastname, sender.account_email`,
             [account_id]
         );
         return data.rows;
@@ -107,17 +110,18 @@ async function getSentMessagesByAccountId(account_id) {
                 sender.account_firstname as sender_firstname,
                 sender.account_lastname as sender_lastname,
                 sender.account_email as sender_email, 
-                recipient.account_firstname as recipient_firstname,
-                recipient.account_lastname as recipient_lastname,
-                recipient.account_email as recipient_email  
+                ARRAY_AGG(recipient.account_email) as list_of_recipient_emails
             FROM public.conversation c 
             JOIN public.message m 
             ON c.conversation_id = m.conversation_id
             JOIN public.account sender
             ON m.sender_id = sender.account_id
+            JOIN public.message_recipient mr
+            ON m.msg_id = mr.msg_id 
             JOIN public.account recipient
-            ON m.recipient_id = recipient.account_id
-            WHERE m.sender_id = $1`,
+            ON mr.account_id = recipient.account_id
+            WHERE m.sender_id = $1
+            GROUP BY c.conversation_id, m.msg_id, sender.account_firstname, sender.account_lastname, sender.account_email`,
             [account_id]
         );
         return data.rows;
@@ -145,15 +149,37 @@ async function addNewConversation(subject) {
 /* ********************************
 * create new message
 ********************************** */
-async function addNewMessage(msg_content, sender_id, recipient_id, conversation_id) {
+async function addNewMessage(msg_content, sender_id, conversation_id) {
     try {
         const sql = `
-        INSERT INTO public.message (msg_content, sender_id, recipient_id, conversation_id)
-        VALUES ($1, $2, $3, $4)
+        INSERT INTO public.message (msg_content, sender_id, conversation_id)
+        VALUES ($1, $2, $3) RETURNING *
         `;
-        return await pool.query(sql, [msg_content, sender_id, recipient_id, conversation_id]);
+        const data = await pool.query(sql, [msg_content, sender_id, conversation_id]);
+        return data.rows[0].msg_id;
     } catch (error) {
         console.error("addNewMessage error: " + error);
+    }
+}
+
+/* ********************************
+* add message recipients
+********************************** */
+async function addMessageRecipients(msg_id, ...account_ids) {
+    try {
+        const sql = `
+        INSERT INTO public.message_recipient (msg_id, account_id)
+        VALUES ($1, $2) RETURNING *
+        `;
+        let data = [];
+        for (let account_id of account_ids) {
+            const result = await pool.query(sql, [msg_id, account_id]);
+            data.push(result.rows[0]);
+        }
+        console.log(data);
+        return data;
+    } catch (error) {
+        console.error("addMessageRecipients error: " + error);
     }
 }
 
@@ -161,13 +187,13 @@ async function addNewMessage(msg_content, sender_id, recipient_id, conversation_
 /* ********************************
 * set message to read
 ********************************** */
-async function setMessageOpened(msg_id, msg_is_opened) {
+async function setMessageRead(msg_id, account_id, was_read = true) {
     try {
         const sql = `
-        UPDATE public.message SET msg_is_opened = $1
-        WHERE msg_id = $2 RETURNING *;
+        UPDATE public.message_recipient SET was_read = $1
+        WHERE msg_id = $2 AND account_id = $3 RETURNING *;
         `;
-        return await pool.query(sql, [msg_is_opened, msg_id]);
+        return await pool.query(sql, [was_read, msg_id, account_id]);
     } catch (error) {
         console.error("setMessageOpened error: " + error);
     }
@@ -187,6 +213,22 @@ async function deleteMessage(msg_id) {
     }
 }
 
+/* ********************************
+* delete message for account
+********************************** */
+async function deleteMessageForAccount(msg_id, account_id) {
+    try {
+        const sql = `
+        UPDATE public.message_recipient
+        SET deleted_at = CURRENT_TIMESTAMP 
+        WHERE msg_id = $1 AND account_id = $2
+        `;
+        return await pool.query(sql, [msg_id, account_id]);
+    } catch (error) {
+        console.error("deleteMessage error: " + error);
+    }
+}
 
 
-module.exports = { getReceivedMessagesByAccountId, getSentMessagesByAccountId, addNewConversation, addNewMessage, setMessageOpened, deleteMessage, getMessageByID, getMessagesByConversation }
+
+module.exports = { getReceivedMessagesByAccountId, getSentMessagesByAccountId, addNewConversation, addNewMessage, addMessageRecipients, setMessageRead, deleteMessage, getMessageByID, getMessagesByConversation, deleteMessageForAccount }

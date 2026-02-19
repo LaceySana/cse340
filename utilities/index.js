@@ -158,15 +158,21 @@ Util.checkAccountType = (req, res, next) => {
 *  build received message list for account
 * ************************************** */
 Util.buildReceivedMessageList = async function(data)  {
+    const dtFormat = new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",});
     let list;
     if (data.length > 0) {
         list = `<ul id="msg-list">`;
         data.forEach(msg => {
             list += `
             <li>
+                <p>${dtFormat.format(msg.msg_timestamp)}</p>
                 <p><strong>${msg.sender_firstname} ${msg.sender_lastname}</strong></p>
                 <p>${msg.subject}</p>
-                <div class="opened-marker"></div>
                 <input type="hidden" value="${msg.msg_id}">
             </li>
             `;
@@ -189,13 +195,18 @@ Util.buildSentMessageList = async function(data)  {
         hour: "numeric",
         minute: "numeric",});
     let list;
+    console.log(data);
     if (data.length > 0) {
         list = `<ul id="msg-list">`;
         data.forEach(msg => {
             list += `
             <li>
                 <p>${dtFormat.format(msg.msg_timestamp)}</p>
-                <p><strong>${msg.recipient_firstname} ${msg.recipient_lastname}</strong></p>
+                <p><strong>`;
+            
+            list += msg.list_of_recipient_emails.map(email => email).join(", ");
+            list += `
+                </strong></p>
                 <p>${msg.subject}</p>
                 <input type="hidden" value="${msg.msg_id}">
             </li>
@@ -208,7 +219,35 @@ Util.buildSentMessageList = async function(data)  {
     return list;
 }
 
+Util.buildConversationList = async function(data) {
+    const dtFormat = new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",});
+    let list;
+    if (data.length > 0) {
+        list = `<ul id="conversation-msgs">`;
+        data.forEach(msg => {
+            list += `
+            <li>
+                <p>${dtFormat.format(msg.msg_timestamp)}</p>
+                <h2>${msg.sender_firstname} ${msg.sender_lastname}</h2>
+                <h3>${msg.subject}</h3>
+                <h4><i>To: ${msg.list_of_recipient_emails.map(email => email).join(", ")}</i></h4>
+                <div>${msg.msg_content}</div>
+                <input type="hidden" name="msg_id" value="${msg.msg_id}">
+            </li>
+            `;
+        });
+        list += `</ul>`;
+    } else {
+        list = `<p>No message found.</p>`;
+    }
+    return list;
+}
 
 
 
-module.exports = Util
+module.exports = Util;
